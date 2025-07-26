@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 mb-3"><i class="fas fa-home text-primary"></i> House Price Predictor</h1>
+    <p class="lead">Predict house prices using machine learning</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                <h4>Load Model</h4>
+                <p>Upload your trained model</p>
+                <a href="{{ url_for('load_model_page') }}" class="btn btn-primary">Load Model</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-calculator fa-3x text-primary mb-3"></i>
+                <h4>Predict Price</h4>
+                <p>Get price predictions</p>
+                <a href="{{ url_for('predict') }}" class="btn btn-primary">Predict Price</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-info-circle fa-3x text-primary mb-3"></i>
+                <h4>Model Info</h4>
+                <p>View model details</p>
+                <a href="{{ url_for('model_info_page') }}" class="btn btn-primary">View Info</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not model_loaded %}
+<div class="alert alert-warning text-center mt-4">
+    <strong>No Model Loaded</strong><br>
+    Please load a model first to start making predictions.
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="fas fa-calculator text-primary"></i> House Price Prediction</h2>
+
+{% if not model_loaded %}
+<div class="alert alert-warning">
+    No model loaded. <a href="{{ url_for('load_model_page') }}">Load a model first</a>.
+</div>
+{% else %}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Square Footage</label>
+                        <input type="number" class="form-control" name="square_footage" 
+                               placeholder="e.g., 2000" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bedrooms</label>
+                        <input type="number" class="form-control" name="bedrooms" 
+                               placeholder="e.g., 3" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total Bathrooms</label>
+                        <input type="number" class="form-control" name="total_bathrooms" 
+                               placeholder="e.g., 2.5" required min="0.5" step="0.5">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Predict Price</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        {% if prediction_result %}
+        <div class="prediction-result">
+            <h3>Prediction Result</h3>
+            <div class="display-4">{{ prediction_result.formatted_price }}</div>
+            <span class="badge confidence-{{ prediction_result.confidence.lower() }}">
+                {{ prediction_result.confidence }} Confidence
+            </span>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                <h5>Ready for Prediction</h5>
+                <p>Enter house details to get a price prediction.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

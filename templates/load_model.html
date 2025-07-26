@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<h2><i class="fas fa-upload text-primary"></i> Load Prediction Model</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        {% if models %}
+        <table class="table">
+            <thead>
+                <tr><th>Model File</th><th>Size</th><th>Modified</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+                {% for model in models %}
+                <tr>
+                    <td>{{ model.filename }}</td>
+                    <td>{{ "%.1f KB"|format(model.size / 1024) }}</td>
+                    <td>{{ model.modified }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm load-model-btn" 
+                                data-model-path="{{ model.path }}"
+                                data-metadata-path="{{ model.metadata_path or '' }}">
+                            Load
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center">
+            <p>No models found. Place your .joblib or .pkl files in the saved_models directory.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.load-model-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const modelPath = this.getAttribute('data-model-path');
+        const metadataPath = this.getAttribute('data-metadata-path');
+        
+        fetch('/api/load_model', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({model_path: modelPath, metadata_path: metadataPath})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Model loaded successfully!');
+                window.location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
